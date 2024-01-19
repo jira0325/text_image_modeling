@@ -11,40 +11,59 @@ jobs:
 
     services:
       mysql:
-        image: localhost:5000/mysql:latest
-        ports:
-          - 3306:3306
+        image: mysql:latest
         env:
+          #MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: img_txt_project
           MYSQL_USER: root
+          #MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ports:
+          - 3306:3306
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
+
+
+      - name: Build and Push mysql Image
+        run: |
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/mysql:latest ./mysql
+          docker push ${{ secrets.USER_DOCKERHUB }}/mysql:latest  
+
       - name: Build and Push API Image
         run: |
-          docker build -t localhost:5000/api:latest ./api
-          docker push localhost:5000/api:latest
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/api:latest ./api
+          docker push ${{ secrets.USER_DOCKERHUB }}/api:latest
 
       - name: Build and Push Model Image
         run: |
-          docker build -t localhost:5000/model:latest ./model
-          docker push localhost:5000/model:latest
+          docker buildx create --use
+          docker buildx inspect --bootstrap
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/model:latest ./model
+          docker push ${{ secrets.USER_DOCKERHUB }}/model:latest
 
       - name: Deploy with Docker Compose
         run: |
           docker-compose up -d
 
-          # Sleep for a while to allow containers to start
-          sleep 30
-
-          # Add any necessary steps for database migrations or other initialization
-          # Example: docker-compose exec api python manage.py migrate
-
       - name: Test Deployment
         run: |
-          docker-compose exec api pytest
+          pip3 install -r requirements.txt 
+          cd app/
+          pytest
 
       - name: Tear Down Deployment
         run: |
