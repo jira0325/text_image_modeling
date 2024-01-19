@@ -15,10 +15,8 @@ jobs:
         ports:
           - 3306:3306
         env:
-          #MYSQL_ROOT_PASSWORD: root_password
           MYSQL_DATABASE: img_txt_project
           MYSQL_USER: root
-          #MYSQL_PASSWORD: your_password
 
     steps:
       - name: Checkout Repository
@@ -38,11 +36,15 @@ jobs:
         run: |
           docker-compose up -d
 
+          # Sleep for a while to allow containers to start
+          sleep 30
+
+          # Add any necessary steps for database migrations or other initialization
+          # Example: docker-compose exec api python manage.py migrate
+
       - name: Test Deployment
         run: |
-          pip3 install -r requirements.txt 
-          cd app/
-          pytest
+          docker-compose exec api pytest
 
       - name: Tear Down Deployment
         run: |
