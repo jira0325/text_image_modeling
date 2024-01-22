@@ -6,4 +6,4 @@ CREATE TABLE images (
 
 
 INSERT INTO images (nom_image, donnees_image) 
-VALUES ('image1.jpg', LOAD_FILE('/Users/hajar/Documents/projet_img_txt/images_test/cm1-flc-c13-img02.png'));
+VALUES ('image1.jpg', LOAD_FILE('/docker-entrypoint-initdb.d/cm1-flc-c13-img02.png'));
