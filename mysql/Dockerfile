@@ -8,3 +8,6 @@ ENV MYSQL_USER=root
 
 # Copie de fichiers SQL pour initialiser la base de données (si nécessaire)
 COPY script1.sql /docker-entrypoint-initdb.d/
+
+# Debug pour lister les fichiers dans le répertoire du Dockerfile
+RUN ls -l /docker-entrypoint-initdb.d/
