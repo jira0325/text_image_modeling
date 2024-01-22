@@ -7,4 +7,4 @@ ENV MYSQL_USER=root
 #ENV MYSQL_PASSWORD=password_utilisateur
 
 # Copie de fichiers SQL pour initialiser la base de données (si nécessaire)
-COPY Users/hajar/text_image_modeling/mysql/script1.sql /docker-entrypoint-initdb.d/
+COPY script1.sql /docker-entrypoint-initdb.d/
