@@ -47,10 +47,8 @@ jobs:
           docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/mysql:latest ./mysql
           docker push ${{ secrets.USER_DOCKERHUB }}/mysql:latest  
 
-
       - name: Display Content of /docker-entrypoint-initdb.d/
-  	run: docker run --rm ${{ secrets.USER_DOCKERHUB }}/mysql:latest ls -l /docker-entrypoint-initdb.d/
-
+        run: docker run --rm ${{ secrets.USER_DOCKERHUB }}/mysql:latest ls -l /docker-entrypoint-initdb.d/
 
 
       - name: Build and Push API Image
