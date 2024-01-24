@@ -48,6 +48,10 @@ jobs:
           docker push ${{ secrets.USER_DOCKERHUB }}/mysql:latest  
 
 
+      - name: Display Content of /docker-entrypoint-initdb.d/
+  	run: docker run --rm ${{ secrets.USER_DOCKERHUB }}/mysql:latest ls -l /docker-entrypoint-initdb.d/
+
+
 
       - name: Build and Push API Image
         run: |
