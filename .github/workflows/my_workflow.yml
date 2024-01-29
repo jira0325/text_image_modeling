@@ -6,20 +6,8 @@ on:
       - main
 
 jobs:
-  deploy:
+  build_and_push_mysql:
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          #MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: img_txt_project
-          MYSQL_USER: root
-          #MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        ports:
-          - 3306:3306
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -33,38 +21,49 @@ jobs:
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
 
-      - name: Display Directory Contents
-        run: ls -l ./mysql
-
-      - name: Display Dockerfile Contents
-        run: cat ./mysql/Dockerfile
-
-
       - name: Build and Push mysql Image
-        run: |
-          docker buildx create --use
-          docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/mysql:latest ./mysql
-          docker push ${{ secrets.USER_DOCKERHUB }}/mysql:latest  
+        run: ./build-and-push.sh mysql
 
-      - name: Display Content of /docker-entrypoint-initdb.d/
-        run: docker run --rm ${{ secrets.USER_DOCKERHUB }}/mysql:latest ls -l /docker-entrypoint-initdb.d/
+  build_and_push_api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
 
       - name: Build and Push API Image
-        run: |
-          docker buildx create --use
-          docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/api:latest ./api
-          docker push ${{ secrets.USER_DOCKERHUB }}/api:latest
+        run: ./build-and-push.sh api
+
+  build_and_push_model:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
 
       - name: Build and Push Model Image
-        run: |
-          docker buildx create --use
-          docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.USER_DOCKERHUB }}/model:latest ./model
-          docker push ${{ secrets.USER_DOCKERHUB }}/model:latest
+        run: ./build-and-push.sh model
 
+  deploy_and_test:
+    needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy with Docker Compose
         run: |
           docker-compose up -d
