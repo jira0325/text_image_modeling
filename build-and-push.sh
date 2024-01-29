@@ -2,6 +2,8 @@
 
 # Script pour construire et pousser une image Docker
 
+echo "Building and pushing $1 image..."
+
 if [ "$1" == "mysql" ]; then
     docker build -t $DOCKER_USERNAME/mysql:latest ./mysql
     docker push $DOCKER_USERNAME/mysql:latest
@@ -15,3 +17,5 @@ else
     echo "Usage: $0 [mysql|api|model]"
     exit 1
 fi
+
+echo "Build and push completed."
