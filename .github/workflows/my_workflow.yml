@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: List Files
-        run: ls -l
+        run: ls -l ..
 
       - name: Deploy with Docker Compose
         run: |
