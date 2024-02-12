@@ -69,7 +69,7 @@ jobs:
 
       - name: Deploy with Docker Compose
         run: |
-          docker-compose   up -d
+          docker-compose  -f up -d
 
       - name: Test Deployment
         run: |
