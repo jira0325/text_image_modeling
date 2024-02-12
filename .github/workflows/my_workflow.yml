@@ -19,7 +19,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push mysql Image
         run: ./build-and-push.sh mysql
@@ -37,7 +37,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push API Image
         run: ./build-and-push.sh api
@@ -55,7 +55,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push Model Image
         run: ./build-and-push.sh model
@@ -67,23 +67,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
-        uses: docker/compose-action@v2
-        with:
-          compose-file: docker-compose.yml
-
-      - name: Deploy with Docker Compose
+      - name: Deploying Services with Docker Compose
         run: |
-          docker-compose up -d
+          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml up -d
 
-      - name: Test API and Model
+      - name: Testing Deployment
         run: |
-          pip3 install -r requirements.txt 
+          pip3 install -r requirements.txt
           cd app/
           pytest
-          # Here you can add your testing commands
-          # For example:
-          # curl http://localhost:8000/api/endpoint
-          # curl http://localhost:8001/model/endpoint
 
-      # Add more steps for further testing or cleanup
+      - name: Tearing Down Services
+        run: |
+          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml down
