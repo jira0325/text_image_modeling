@@ -67,18 +67,18 @@ jobs:
       - name: List Files
         run: ls -l ..
 
-      - name: Check if docker-compose.yml exists
-        run: |
-          if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
-            echo "docker-compose.yml exists."
-          else
-            echo "docker-compose.yml does not exist."
-            exit 1
-          fi  
+      #- name: Check if docker-compose.yml exists
+        #run: |
+          #if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
+            #echo "docker-compose.yml exists."
+          #else
+            #echo "docker-compose.yml does not exist."
+            #exit 1
+          #fi  
 
       - name: Deploy with Docker Compose
         run: |
-          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml  up -d
+          docker-compose -f ./docker-compose.yml  up -d
 
       - name: Test Deployment
         run: |
@@ -88,5 +88,5 @@ jobs:
 
       - name: Tear Down Deployment
         run: |
-          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml down
+          docker-compose -f ./docker-compose.yml down
 
