@@ -22,7 +22,7 @@ jobs:
         run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push mysql Image
-        run: ./build-and-push.sh mysql
+        run: ./build-and-push.sh mysql latest
 
   build_and_push_api:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push API Image
-        run: ./build-and-push.sh api
+        run: ./build-and-push.sh api latest
 
   build_and_push_model:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
         run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
       - name: Build and Push Model Image
-        run: ./build-and-push.sh model
+        run: ./build-and-push.sh model latest
 
   deploy_and_test:
     needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
