@@ -64,33 +64,26 @@ jobs:
     needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
     runs-on: ubuntu-latest
     steps:
-      #- name: List Files
-        #run: ls -l ..
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      #- name: Check if docker-compose.yml exists
-        #run: |
-          #if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
-            #echo "docker-compose.yml exists."
-          #else
-            #echo "docker-compose.yml does not exist."
-            #exit 1
-          #fi  
-      
-      #- name: Check $GITHUB_WORKSPACE
-        #run: ls -l $GITHUB_WORKSPACE
-
+      - name: Set up Docker Compose
+        uses: docker/compose-action@v2
+        with:
+          compose-file: docker-compose.yml
 
       - name: Deploy with Docker Compose
         run: |
-          docker-compose -f docker-compose.yml  up -d
+          docker-compose up -d
 
-      - name: Test Deployment
+      - name: Test API and Model
         run: |
           pip3 install -r requirements.txt 
           cd app/
           pytest
+          # Here you can add your testing commands
+          # For example:
+          # curl http://localhost:8000/api/endpoint
+          # curl http://localhost:8001/model/endpoint
 
-      - name: Tear Down Deployment
-        run: |
-          docker-compose -f docker-compose.yml down
-
+      # Add more steps for further testing or cleanup
