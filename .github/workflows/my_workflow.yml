@@ -64,8 +64,8 @@ jobs:
     needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
     runs-on: ubuntu-latest
     steps:
-      - name: List Files
-        run: ls -l ..
+      #- name: List Files
+        #run: ls -l ..
 
       #- name: Check if docker-compose.yml exists
         #run: |
@@ -76,8 +76,8 @@ jobs:
             #exit 1
           #fi  
       
-      - name: Check $GITHUB_WORKSPACE
-        run: ls -l $GITHUB_WORKSPACE
+      #- name: Check $GITHUB_WORKSPACE
+        #run: ls -l $GITHUB_WORKSPACE
 
 
       - name: Deploy with Docker Compose

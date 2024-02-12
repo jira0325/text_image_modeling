@@ -1,96 +1,19 @@
-name: Deploy Project
+version: '3'
 
-on:
-  push:
-    branches:
-      - main
+services:
+  model:
+    image: model:latest
+    ports:
+      - "8001:8000"  # Ajoutez des ports si nécessaire
 
-jobs:
-  build_and_push_mysql:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+  api:
+    image: api:latest
+    ports:
+      - "8000:8000"  # Assurez-vous que les ports ne sont pas en conflit avec d'autres services
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
-
-      - name: Build and Push mysql Image
-        run: ./build-and-push.sh mysql
-
-  build_and_push_api:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
-
-      - name: Build and Push API Image
-        run: ./build-and-push.sh api
-
-  build_and_push_model:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB}}
-
-      - name: Build and Push Model Image
-        run: ./build-and-push.sh model
-
-  deploy_and_test:
-    needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
-    runs-on: ubuntu-latest
-    steps:
-      - name: List Files
-        run: ls -l ..
-
-      #- name: Check if docker-compose.yml exists
-        #run: |
-          #if [ -f "$GITHUB_WORKSPACE/docker-compose.yml" ]; then
-            #echo "docker-compose.yml exists."
-          #else
-            #echo "docker-compose.yml does not exist."
-            #exit 1
-          #fi  
-      
-      - name: Check $GITHUB_WORKSPACE
-        run: ls -l $GITHUB_WORKSPACE
-
-
-      - name: Deploy with Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml  up -d
-
-      - name: Test Deployment
-        run: |
-          pip3 install -r requirements.txt 
-          cd app/
-          pytest
-
-      - name: Tear Down Deployment
-        run: |
-          docker-compose -f docker-compose.yml down
-
+  mysql:
+    image: mysql:latest
+    #environment:
+      #MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+    ports:
+      - "3306:3306"  # Assurez-vous que les ports ne sont pas en conflit avec d'autres services
