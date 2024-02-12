@@ -2,17 +2,17 @@ version: '3'
 
 services:
   model:
-    image: model:latest
+    image: model
     ports:
       - "8001:8000"  # Ajoutez des ports si nécessaire
 
   api:
-    image: api:latest
+    image: api
     ports:
       - "8000:8000"  # Assurez-vous que les ports ne sont pas en conflit avec d'autres services
 
   mysql:
-    image: mysql:latest
+    image: mysql
     #environment:
       #MYSQL_ALLOW_EMPTY_PASSWORD: "1"
     ports:
