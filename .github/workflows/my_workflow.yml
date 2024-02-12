@@ -75,6 +75,10 @@ jobs:
             #echo "docker-compose.yml does not exist."
             #exit 1
           #fi  
+      
+      - name: Check $GITHUB_WORKSPACE
+        run: ls -l $GITHUB_WORKSPACE
+
 
       - name: Deploy with Docker Compose
         run: |
