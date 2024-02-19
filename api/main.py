@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , UploadFile, File, Depends
 import cv2
 import pytesseract
 from transformers import pipeline
@@ -6,7 +6,10 @@ import sentencepiece
 from pydantic import BaseModel
 from uuid import UUID, uuid4
 from typing import List, Optional 
-
+import numpy as np
+from fastapi.responses import StreamingResponse
+import io
+import re
 
 
 api = FastAPI(
@@ -18,54 +21,58 @@ class User(BaseModel):
     first_name: str
     password : str
 
-def get_image(image_path):
-    # Charger l'image avec OpenCV
-    image = cv2.imread(image_path)
-
+# Fonction pour extraire le texte de l'image
+def get_image(image_bytes):
+    nparr = np.frombuffer(image_bytes, np.uint8)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     if image is None:
         print("Impossible de charger l'image.")
         return None
-
-    # Convertir l'image en niveaux de gris
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Appliquer un seuillage pour obtenir un texte plus clair
     _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)
-
-    # Appliquer un flou pour améliorer la qualité de l'OCR
     blur = cv2.GaussianBlur(thresh, (5, 5), 0)
-
-    # Utilisation de Tesseract pour l'extraction du texte
     texte = pytesseract.image_to_string(blur)
-
     return texte
 
+image_content = None  # Variable globale pour stocker le contenu de l'image
 
-def get_extract_text_from_image():
-    # Chemin de votre image
-    image_path = '/Users/hajar/Documents/projet_img_txt/images_test/ob_a94ee4_demain-c-est-la-rentree-texte.jpg'
+@api.post('/get-data')
+async def get_data(image: UploadFile = File(...)):
+    global image_content
+    image_content = await image.read()
+    # Traiter l'image comme requis
+    return {"message": "Image téléchargée avec succès."}
 
-    # Extraire le texte de l'image
-    texte_extrait = get_image(image_path)
+def remove_special_characters(text):
+    # Utilisation d'une expression régulière pour remplacer les caractères spéciaux par une chaîne vide
+    cleaned_text = re.sub(r'[^\w\s]', ' ', text)
+    return cleaned_text
 
-    if texte_extrait:
-        #print("Texte extrait de l'image :")
-        return texte_extrait
-    else:
-        return "Aucun texte n'a été extrait de l'image."
+@api.get('/get_text')
+async def get_text():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+    texte_sans_n = remove_special_characters(text)
+    texte_sans_n = text.replace('\n', ' ')
+    return {"text":texte_sans_n}
 
-@api.get('/get-data')
-def get_data():
-    text = get_extract_text_from_image()
-    return text
 
-texte_extrait = get_data()
+# Route GET pour la summarization du texte extrait
+@api.get('/summarization')
+def summarize_text():
+    # Obtenir le texte extrait de l'image via la route POST
 
-@api.get('/get-summarization')
-def get_summarization():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+    texte_sans_n = text.replace('\n', '')
     summarization = pipeline("summarization", model="moussaKam/barthez-orangesum-title")
-    return summarization(texte_extrait)
+    summarized_text = summarization(texte_sans_n)
+    
+    return summarized_text
 
+   
 
 ### question anwrer ###
 class Title(BaseModel):
@@ -73,12 +80,16 @@ class Title(BaseModel):
     quest: str
 
 def question_answerer(quest):
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
     question_answerer = pipeline("question-answering", model="bert-large-uncased-whole-word-masking-finetuned-squad")
     result_question = question_answerer(
     question= quest,
-    context=texte_extrait,
+    context=text,
     )
-    return result_question
+    return {'answer' :  result_question}
 
 
 
@@ -92,9 +103,13 @@ def create_question(user : Title):
 #### translation ###
 @api.get('/get-translation')
 def translator():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
     translator = pipeline("translation", model="Helsinki-NLP/opus-mt-fr-en")
-    translated_text = translator(texte_extrait, max_length=400)[0]['translation_text']
-    return  translated_text
+    translated_text = translator(text, max_length=400)[0]['translation_text']
+    return {'translation':  translated_text}
 
 
 

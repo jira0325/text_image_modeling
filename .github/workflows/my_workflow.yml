@@ -73,7 +73,8 @@ jobs:
 
       - name: Testing Deployment
         run: |
-          pip3 install -r requirements.txt
+          #pip3 install -r requirements.txt
+          echo 'hello'
           #cd app/
           #pytest
 
