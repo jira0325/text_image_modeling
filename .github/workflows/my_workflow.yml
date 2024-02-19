@@ -77,7 +77,7 @@ jobs:
 
       - name: Deploy Streamlit Application
         run: |
-          streamlit run application_streamlit.py --server.port 8501
+          streamlit run $GITHUB_WORKSPACE/application_streamlit.py --server.port 8501
     
 
   deploy_and_test:
