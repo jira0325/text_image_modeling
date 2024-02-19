@@ -60,6 +60,26 @@ jobs:
       - name: Build and Push Model Image
         run: ./build-and-push.sh model latest
 
+  build_and_deploy_streamlit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install streamlit requests
+
+      - name: Deploy Streamlit Application
+        run: |
+          streamlit run application_streamlit.py --server.port 8501
+    
+
   deploy_and_test:
     needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
     runs-on: ubuntu-latest
