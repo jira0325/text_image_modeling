@@ -69,7 +69,7 @@ jobs:
 
       - name: Start API container
         run: |
-          docker run -d --name api_container api:<tag>
+          docker run -d --name api_container api:latest
 
 
       - name: Set up Python
