@@ -72,7 +72,7 @@ jobs:
 
       - name: Start API container
         run: |
-          docker run -d --name api_container api:latest
+          docker run -d --name api_container hajarelhizabri/api:latest
 
 
       - name: Set up Python
