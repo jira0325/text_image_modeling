@@ -62,9 +62,7 @@ jobs:
 
   build_and_deploy_streamlit:
     runs-on: ubuntu-latest
-    resources:
-      cpu: 2
-      memory: 4GB
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
