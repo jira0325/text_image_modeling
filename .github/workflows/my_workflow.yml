@@ -60,41 +60,27 @@ jobs:
       - name: Build and Push Model Image
         run: ./build-and-push.sh model latest
 
-  build_and_deploy_streamlit:
+  build_and_push_streamlit:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
 
-      - name: Start API container
-        run: |
-          docker run -d --name api_container hajarelhizabri/api:latest
+      - name: Build and Push streamlit Image
+        run: ./build-and-push.sh streamlit latest
 
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          pip install streamlit requests
-
-      - name: Deploy Streamlit Application
-        env:
-          SERVER_IP: localhost
-          PORT: 8501
-        run: |
-          python3 -m streamlit run application_sreamlit.py --server.address localhost --server.port 8501
-    
-
-
-  deploy_and_test:
-    needs: [build_and_push_mysql, build_and_push_api, build_and_push_model]
+  deploy_and_test: 
+    needs: [build_and_push_mysql, build_and_push_api, build_and_push_model, build_and_push_streamlit]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository

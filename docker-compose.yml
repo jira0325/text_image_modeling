@@ -17,3 +17,12 @@ services:
       #MYSQL_ALLOW_EMPTY_PASSWORD: "1"
     ports:
       - "3306:3306"  # Assurez-vous que les ports ne sont pas en conflit avec d'autres services
+
+  streamlit:
+    image: hajarelhizabri/streamlit:latest
+    #environment:
+      #MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+    ports:
+      - "8501:8501"     
+
+      
