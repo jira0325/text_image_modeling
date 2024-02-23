@@ -22,7 +22,7 @@ services:
     image: hajarelhizabri/streamlit:latest
     #environment:
       #MYSQL_ALLOW_EMPTY_PASSWORD: "1"
-    ports:
-      - "8501:8501"     
+    #ports:
+      #- "8501:8501"     
+    command: /streamlit run application_sreamlit.py --server.port 8501
 
-      
