@@ -5,8 +5,10 @@ RUN apt-get update && apt-get install -y git
 
 WORKDIR /streamlit
 #COPY requirements.txt ./requirements.txt
-#RUN pip install -r requirements.txt
-EXPOSE 8501
+RUN pip install streamlit requests
+#EXPOSE 8501
 COPY application_sreamlit.py /streamlit
-ENTRYPOINT [ "streamlit", "run" ]
-CMD ["application_sreamlitpy"]
+#ENTRYPOINT [ "streamlit", "run" ]
+#CMD ["application_sreamlitpy"]
+# Commande par défaut pour exécuter l'application Streamlit
+CMD ["streamlit", "run", "application_sreamlit.py", "--server.port", "8501"]
