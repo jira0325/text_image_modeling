@@ -85,6 +85,9 @@ jobs:
           pip install streamlit requests
 
       - name: Deploy Streamlit Application
+        env:
+          SERVER_IP: localhost
+          PORT: 8501
         run: |
           python3 -m streamlit run application_sreamlit.py --server.address localhost --server.port 8501
     
