@@ -60,6 +60,7 @@ jobs:
       - name: Build and Push Model Image
         run: ./build-and-push.sh model latest
 
+
   build_and_push_streamlit:
     runs-on: ubuntu-latest
     steps:
