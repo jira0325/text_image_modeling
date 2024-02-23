@@ -86,7 +86,7 @@ jobs:
 
       - name: Deploy Streamlit Application
         run: |
-          python3 -m streamlit run application_sreamlit.py --server.port 8501
+          python3 -m streamlit run application_sreamlit.py --server.address localhost --server.port 8501
     
 
 
