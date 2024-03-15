@@ -11,4 +11,4 @@ COPY application_sreamlit.py /streamlit
 #ENTRYPOINT [ "streamlit", "run" ]
 #CMD ["application_sreamlitpy"]
 # Commande par défaut pour exécuter l'application Streamlit
-CMD ["streamlit", "run", "application_sreamlit.py", "--server.port", "8501"]
+CMD ["python3", "-m", "streamlit", "run", "application_stramlit.py", "--server.port", "8501"]
