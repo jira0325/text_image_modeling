@@ -105,7 +105,8 @@ jobs:
           token: ${{ secrets.TOKEN }}
 
       - name: Display GitHub Pages URL
-        run: echo "GitHub Pages URL: ${{ steps.get_pages_url.outputs.url }}"
+        run: |
+          echo "GitHub Pages URL: ${{ steps.get_pages_url.outputs.url }}"
     
 
       - name: Tearing Down Services
