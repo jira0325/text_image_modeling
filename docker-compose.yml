@@ -26,7 +26,8 @@ services:
       - "8501:8501"     
     command: 
       #- /streamlit
-      - run
-      - application_sreamlit.py
+      - python
+      #- run
+      - /streamlit/application_sreamlit.py
       - --server.port
       - "8501"
