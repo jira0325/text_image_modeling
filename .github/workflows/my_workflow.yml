@@ -124,7 +124,7 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: index
-            path: index.html artifact
+            path: index.html 
 
   deploy_to_github_pages:
     runs-on: ubuntu-latest
