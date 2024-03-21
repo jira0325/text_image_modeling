@@ -99,14 +99,14 @@ jobs:
           #pytest
 
 
-      - name: Get GitHub Pages URL
-        uses: peter-evans/get-pages-url@v3
-        with:
-          token: ${{ secrets.TOKEN }}
+      #- name: Get GitHub Pages URL
+        #uses: peter-evans/get-pages-url@v3
+        #with:
+          #token: ${{ secrets.TOKEN }}
 
       - name: Display GitHub Pages URL
         run: |
-          echo "GitHub Pages URL: ${{ steps.get_pages_url.outputs.url }}"
+          echo "GitHub Pages URL: http://jira0325.github.io/text_image_modeling/"
     
 
       - name: Tearing Down Services
