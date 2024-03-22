@@ -126,6 +126,18 @@ jobs:
             #name: index
             #path: index.html 
 
+  deploy_html:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Upload index.html artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: index
+            path: index.html
+
   deploy_to_github_pages:
     runs-on: ubuntu-latest
     needs: [deploy_and_test]
