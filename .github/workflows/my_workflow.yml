@@ -163,7 +163,7 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: index
-            path: .
+            path: ./
 
         - name: Configure Git
           run: |
