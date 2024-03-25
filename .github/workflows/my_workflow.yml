@@ -159,8 +159,7 @@ jobs:
         - name: Checkout Repository
           uses: actions/checkout@v2
 
-        - name: Copy index.html to deployment directory
-          run: cp index.html $GITHUB_WORKSPACE
+ 
 
         - name: Commit and push changes to GitHub Pages branch
           run: |
