@@ -1,0 +1,162 @@
+name: Deploy Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push_mysql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
+
+      - name: Build and Push mysql Image
+        run: ./build-and-push.sh mysql latest
+
+  build_and_push_api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
+
+      - name: Build and Push API Image
+        run: ./build-and-push.sh api latest
+
+  build_and_push_model:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
+
+      - name: Build and Push Model Image
+        run: ./build-and-push.sh model latest
+
+
+  build_and_push_streamlit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.USER_DOCKERHUB }} -p ${{ secrets.PASSWORD_DOCKERHUB }}
+
+      - name: Build and Push streamlit Image
+        run: ./build-and-push.sh streamlit latest
+
+
+  deploy_and_test: 
+    needs: [build_and_push_mysql, build_and_push_api, build_and_push_model, build_and_push_streamlit]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploying Services with Docker Compose
+        run: |
+          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml up -d
+
+      - name: Testing Deployment
+        run: |
+          #pip3 install -r requirements.txt
+          echo 'hello'
+          #cd app/
+          #pytest
+
+
+      #- name: Get GitHub Pages URL
+        #uses: peter-evans/get-pages-url@v3
+        #with:
+          #token: ${{ secrets.TOKEN }}
+
+      - name: Display GitHub Pages URL
+        run: |
+          echo "GitHub Pages URL: http://jira0325.github.io/text_image_modeling/"
+    
+
+      - name: Tearing Down Services
+        run: |
+          docker-compose -f $GITHUB_WORKSPACE/docker-compose.yml down
+
+
+  #deploy_html:
+      #runs-on: ubuntu-latest
+      #steps:
+        #- name: Checkout Repository
+          #uses: actions/checkout@v2
+
+       # - name: Upload index.html artifact
+          #uses: actions/upload-artifact@v2
+          #with:
+            #name: index
+            #path: index.html 
+
+  deploy_html:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Upload index.html artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: index
+            path: index.html
+            node-version: '20'
+
+  deploy_to_github_pages:
+      runs-on: ubuntu-latest
+      needs: [deploy_and_test]
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Download index.html artifact
+          uses: actions/download-artifact@v2
+          with:
+            name: index
+            path: ./
+
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          #if: github.ref == 'refs/heads/main'
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./
+
+  
