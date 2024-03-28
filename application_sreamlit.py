@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # URL de votre API FastAPI
-API_URL = "http://localhost:8000"
+API_URL = "https://textimagemodeling-wdnvphwmkxjxvyfr8rxpwh.streamlit.app/"
 
 # Variable globale pour stocker le texte extrait
 extracted_text = None
