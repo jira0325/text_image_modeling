@@ -8,7 +8,7 @@
         "env": { "VERCEL_BUILDER": "python" }
       }
     ],
-    "functions": { "api": { "memory": 512 } },
+    
     "routes": [
       { "src": "/(.*)", "dest": "main.py" }
     ]
