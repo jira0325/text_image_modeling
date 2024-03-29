@@ -4,10 +4,10 @@
       "MY_VARIABLE": "my_value"
     },
     "routes": [
-      { "src": "/api/v1/get_text", "dest": "main.py" },
-      { "src": "/api/v1/summarization", "dest": "main.py" },
-      { "src": "/api/v1/question", "dest": "main.py" },
-      { "src": "/api/v1/get-translation", "dest": "main.py" }
+      { "src": "/get_text", "dest": "main.py" },
+      { "src": "/summarization", "dest": "main.py" },
+      { "src": "/question", "dest": "main.py" },
+      { "src": "/get-translation", "dest": "main.py" }
     ]
     
   }
