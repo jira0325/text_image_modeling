@@ -2,8 +2,15 @@
     "version": 2,
     "builds": [
       {
-        "src": "main.py", 
-        "use": "@vercel/python"
+        "src": "main.py", // Le fichier principal de votre application FastAPI
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb" },
+        "env": { "VERCEL_BUILDER": "python" }
       }
+    ],
+    "functions": { "api": { "memory": 512 } },
+    "routes": [
+      { "src": "/(.*)", "dest": "main.py" }
     ]
   }
+  
