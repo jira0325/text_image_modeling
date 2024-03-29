@@ -1,14 +1,8 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "main.py", 
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb" },
-        "env": { "VERCEL_BUILDER": "python" }
-      }
-    ],
-    
+    "env": {
+      "MY_VARIABLE": "my_value"
+    },
     "routes": [
       { "src": "/(.*)", "dest": "main.py" }
     ]
