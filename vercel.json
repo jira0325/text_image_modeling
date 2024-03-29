@@ -4,7 +4,11 @@
       "MY_VARIABLE": "my_value"
     },
     "routes": [
-      { "src": "/(.*)", "dest": "main.py" }
+      { "src": "/api/v1/get_text", "dest": "main.py" },
+      { "src": "/api/v1/summarization", "dest": "main.py" },
+      { "src": "/api/v1/question", "dest": "main.py" },
+      { "src": "/api/v1/get-translation", "dest": "main.py" }
     ]
+    
   }
   
