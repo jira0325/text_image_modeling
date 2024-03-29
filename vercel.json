@@ -1,14 +1,14 @@
 {
-    "version": 2,
-    "env": {
-      "MY_VARIABLE": "my_value"
-    },
-    "routes": [
-      { "src": "/get_text", "dest": "main.py" },
-      { "src": "/summarization", "dest": "main.py" },
-      { "src": "/question", "dest": "main.py" },
-      { "src": "/get-translation", "dest": "main.py" }
-    ]
-    
-  }
+  "version": 2,
+  "env": {
+    "MY_VARIABLE": "my_value"
+  },
+  "routes": [
+    { "src": "/get_text", "dest": "main.py" },
+    { "src": "/summarization", "dest": "main.py" },
+    { "src": "/api/v1/question", "dest": "main.py" },
+    { "src": "/get-translation", "dest": "main.py" }
+  ]
+  
+}
   
