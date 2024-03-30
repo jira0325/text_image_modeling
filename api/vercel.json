@@ -1,10 +1,7 @@
 {
   "version": 2,
-  "functions": {
-    "api": {
-      "runtime": "python3.9",
-      "memory": 512
-    }
+  "env": {
+    "MY_VARIABLE": "my_value"
   },
   "routes": [
     { "src": "/get_text", "dest": "main.py" },
@@ -12,4 +9,6 @@
     { "src": "/api/v1/question", "dest": "main.py" },
     { "src": "/get-translation", "dest": "main.py" }
   ]
+  
 }
+  
