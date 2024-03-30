@@ -1,6 +1,11 @@
 {
   "version": 2,
-  "functions": { "api": { "runtime": "python3.8" } },
+  "functions": {
+    "api": {
+      "runtime": "python3.9",
+      "memory": 512
+    }
+  },
   "routes": [
     { "src": "/get_text", "dest": "main.py" },
     { "src": "/summarization", "dest": "main.py" },
