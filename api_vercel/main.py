@@ -16,6 +16,26 @@ api = FastAPI(
     title='Image-Texte'
 )
 
+html = f"""
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FastAPI on Vercel</title>
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    </head>
+    <body>
+        <div class="bg-gray-200 p-4 rounded-lg shadow-lg">
+            
+            <ul>
+                <li><a href="/docs">/docs</a></li>
+                <li><a href="/redoc">/redoc</a></li>
+            </ul>
+            <p>Powered by <a href="https://vercel.com" target="_blank">Vercel</a></p>
+        </div>
+    </body>
+</html>
+"""
+
 class User(BaseModel):
     id: Optional[UUID] = uuid4() 
     first_name: str
