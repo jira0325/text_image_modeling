@@ -1,16 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python"
-    }
-  ],
+  "devCommand": "uvicorn main:api --host 127.0.0.1/ --port 8000",
+  "env": {
+    "MY_VARIABLE": "my_value"
+  },
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "main.py"
-    }
+    { "src": "/get_text", "dest": "main.py" },
+    { "src": "/summarization", "dest": "main.py" },
+    { "src": "/api/v1/question", "dest": "main.py" },
+    { "src": "/get-translation", "dest": "main.py" }
   ]
   
 }
