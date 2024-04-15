@@ -1,14 +1,5 @@
 {
-  "version": 2,
-  "devCommand": "uvicorn main:api --host 127.0.0.1/ --port 8000",
-  "env": {
-    "APP_MODULE": "main:api"
-  },
-  "routes": [
-    { "src": "/get_text", "dest": "api_vercel/main.py" },
-    { "src": "/summarization", "dest": "api_vercel/main.py" },
-    { "src": "/api/v1/question", "dest": "api_vercel/main.py" },
-    { "src": "/get-translation", "dest": "api_vercel/main.py" }
+  "rewrites": [
+      {"source": "/(.*)", "destination": "/"}
   ]
-  
 }
