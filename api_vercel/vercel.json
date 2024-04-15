@@ -2,7 +2,7 @@
   "version": 2,
   "devCommand": "uvicorn main:api --host 127.0.0.1/ --port 8000",
   "env": {
-    "MY_VARIABLE": "my_value"
+    "APP_MODULE": "main:api"
   },
   "routes": [
     { "src": "/get_text", "dest": "api_vercel/main.py" },
