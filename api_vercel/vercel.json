@@ -1,6 +1,6 @@
 {
 	"version": 2,
-	"public": false,
+	"public": true,
 	"routes": [
 		{ "src": "/", "dest": "main.py" },
 		{ "src": "/docs", "dest": "main.py" }
