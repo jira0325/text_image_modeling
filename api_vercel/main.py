@@ -10,6 +10,7 @@ import numpy as np
 from fastapi.responses import StreamingResponse
 import io
 import re
+import uvicorn
 
 
 api = FastAPI(
