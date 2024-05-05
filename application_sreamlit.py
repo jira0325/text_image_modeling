@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Lien vers votre image Docker sur Docker Hub
-DOCKER_HUB_URL = "https://hub.docker.com/r/votre_utilisateur/votre_image"
+DOCKER_HUB_URL = "https://hub.docker.com/r/hajarelhizabri/api:latest"
 
 # Variable globale pour stocker le texte extrait
 extracted_text = None
