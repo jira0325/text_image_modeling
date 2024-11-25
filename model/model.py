@@ -66,6 +66,13 @@ print(question_answerer(
     context=texte_extrait,
 ))
 
+###Language Detection
+
+from langdetect import detect
+language = detect(texte_extrait)
+print(f"Detected language: {language}")
+
+
 
 ##### Traduction #####
 # Charger le modèle de traduction pré-entraîné
@@ -78,4 +85,20 @@ translated_text = translator(texte_extrait, max_length=400)[0]['translation_text
 print(f"Texte traduit : {translated_text}")
 
 
+####
+####Named Entity Recognition (NER)####
+ner_pipeline = pipeline("ner", grouped_entities=True)
+ner_results = ner_pipeline(texte_extrait)
+print(ner_results)
 
+##
+### sentiment_analysis##
+sentiment_analysis = pipeline("sentiment-analysis")
+result = sentiment_analysis(texte_extrait)
+print(result)
+
+##
+### text generation  ##
+text_generator = pipeline("text-generation", model="gpt2")
+generated_text = text_generator(texte_extrait, max_length=100)
+print(generated_text)
