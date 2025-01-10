@@ -11,11 +11,16 @@ from fastapi.responses import StreamingResponse
 import io
 import re
 from langdetect import detect
+from mangum import Mangum  # Pour l'intégration avec Vercel
+
 
 
 api = FastAPI(
     title='Image-Texte'
 )
+
+# Fonction pour intégrer FastAPI avec Vercel
+handler = Mangum(api)
 
 class User(BaseModel):
     id: Optional[UUID] = uuid4() 
