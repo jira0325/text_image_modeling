@@ -10,6 +10,7 @@ import numpy as np
 from fastapi.responses import StreamingResponse
 import io
 import re
+from langdetect import detect
 
 
 api = FastAPI(
@@ -100,6 +101,18 @@ def create_question(user : Title):
  return question_answerer(user.quest)
   
 
+###Language Detection
+@api.get('/get-Detected-language')
+def Detected_language():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
+    language = detect(text)
+    return {f"Detected language: {language}"}
+
+
+
 #### translation ###
 @api.get('/get-translation')
 def translator():
@@ -110,6 +123,47 @@ def translator():
     translator = pipeline("translation", model="Helsinki-NLP/opus-mt-fr-en")
     translated_text = translator(text, max_length=400)[0]['translation_text']
     return {'translation':  translated_text}
+
+
+####Named Entity Recognition (NER)####
+@api.get('/get-ner')
+def ner():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
+    ner_pipeline = pipeline("ner", grouped_entities=True)
+
+    ner_results = ner_pipeline(text) 
+    return ner_results
+
+
+### sentiment_analysis##
+@api.get('/get-sentiment_analysis')
+def sentiment_analysis():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
+
+    sentiment_analysis = pipeline("sentiment-analysis")
+    result = sentiment_analysis(text)
+    return result
+
+
+
+### text generation  ##
+@api.get('/get-text_generator')
+def text_generator():
+    if image_content is None:
+        return {"error": "Aucune image n'a été téléchargée."}
+    text = get_image(image_content)
+
+
+    text_generator = pipeline("text-generation", model="cmarkea/gpt2-french")
+    generated_text = text_generator(text, max_length=200)
+    return generated_text
+
 
 
 
